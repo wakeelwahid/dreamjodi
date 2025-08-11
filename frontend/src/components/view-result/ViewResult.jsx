@@ -4,12 +4,12 @@ import { motion } from "framer-motion";
 import "./ViewResult.css";
 
 const GAME_NAMES = [
+  "FARIDABAD",
+  "JAIPUR KING",
+  "GHAZIABAD",
+  "GALI",
   "DIAMOND KING",
   "DISAWER",
-  "FARIDABAD",
-  "GALI",
-  "GHAZIABAD",
-  "JAIPUR KING",
 ];
 
 function groupResultsByDate(results) {
@@ -80,7 +80,7 @@ const ViewResult = () => {
       <div className="header-section">
         <h2 className="section-title">Winning Numbers History</h2>
         {latest && (
-          <motion.div 
+          <motion.div
             className="current-result"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -106,7 +106,7 @@ const ViewResult = () => {
             </div>
             <p className="current-date">
               {new Date(currentDate).toLocaleDateString("en-GB", {
-                weekday: 'long',
+                weekday: "long",
                 day: "2-digit",
                 month: "long",
                 year: "numeric",
@@ -121,16 +121,21 @@ const ViewResult = () => {
           <table className="results-table">
             <thead>
               <tr>
-                <th className="date-column">Date</th>
+                <th className="date-column" style={{backgroundColor:"red"}}>Date</th>
                 {GAME_NAMES.map((game) => (
-                  <th key={game}>{game}</th>
+                  <th key={game} style={{backgroundColor:"red"}}>{game}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {sortedDates.map((date, index) => (
-                <tr key={date} className={index === 0 ? "latest-row" : ""}>
-                  <td className="date-column">
+                <tr
+                  key={date}
+                  className={`excel-row ${
+                    index % 2 === 0 ? "excel-row-even" : "excel-row-odd"
+                  } ${index === 0 ? "latest-row" : ""}`} 
+                >
+                  <td className="date-column" >
                     {new Date(date).toLocaleDateString("en-GB", {
                       day: "2-digit",
                       month: "short",

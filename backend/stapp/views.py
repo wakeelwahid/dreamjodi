@@ -372,21 +372,36 @@ def declare_result(request):
         bahar_digit = int(winning_number[-1])
 
 
-        commission_games = ['FARIDABAD', 'GALI', 'DISAWER', 'GHAZIABAD', 'JAIPUR KING', 'DIAMOND KING']
+
+        # Define special logic for Jaipur King and Diamond King
+        special_games = ['JAIPUR KING', 'DIAMOND KING']
 
         for bet in bets:
             payout = Decimal('0.00')
             is_win = False
 
-            if bet.bet_type == 'number' and str(bet.number).zfill(2) == winning_number:
-                payout = bet.amount * 90
-                is_win = True
-            elif bet.bet_type == 'andar' and int(bet.number) == andar_digit:
-                payout = bet.amount * 9
-                is_win = True
-            elif bet.bet_type == 'bahar' and int(bet.number) == bahar_digit:
-                payout = bet.amount * 9
-                is_win = True
+            if game_name in special_games:
+                # 100x for number, 10x for andar/bahar, no commission
+                if bet.bet_type == 'number' and str(bet.number).zfill(2) == winning_number:
+                    payout = bet.amount * 100
+                    is_win = True
+                elif bet.bet_type == 'andar' and int(bet.number) == andar_digit:
+                    payout = bet.amount * 10
+                    is_win = True
+                elif bet.bet_type == 'bahar' and int(bet.number) == bahar_digit:
+                    payout = bet.amount * 10
+                    is_win = True
+            else:
+                # Default: 90x for number, 9x for andar/bahar, 5% commission
+                if bet.bet_type == 'number' and str(bet.number).zfill(2) == winning_number:
+                    payout = bet.amount * 90
+                    is_win = True
+                elif bet.bet_type == 'andar' and int(bet.number) == andar_digit:
+                    payout = bet.amount * 9
+                    is_win = True
+                elif bet.bet_type == 'bahar' and int(bet.number) == bahar_digit:
+                    payout = bet.amount * 9
+                    is_win = True
 
             wallet = get_user_wallet(bet.user)
             bet.payout = payout
@@ -397,8 +412,8 @@ def declare_result(request):
             else:
                 bet.status = 'lost'
 
-            # --- Commission Logic: 5% of bet amount for commission_games, for all bet types ---
-            if game_name in commission_games:
+            # Commission: Only for non-special games
+            if game_name not in special_games:
                 if bet.user.referred_by:
                     try:
                         referrer = User.objects.get(referral_code=bet.user.referred_by)
@@ -579,13 +594,15 @@ from django.utils import timezone
 ## DIAMOND KING is now a single-session game. Multi-session logic is removed/disabled.
 
 GAME_TIMINGS = {
-    "JAIPUR KING": {"open": "17:30", "close": "16:50"},
+    
     "FARIDABAD": {"open": "20:30", "close": "17:50"},
+    "JAIPUR KING": {"open": "22:30", "close": "17:50"},
     "GHAZIABAD": {"open": "23:30", "close": "21:50"},
     "GALI": {"open": "1:30", "close": "23:40"},
+    "DIAMOND KING": {"open": "1:30", "close": "23:50"},
     "DISAWER": {"open": "07:00", "close": "02:30"},
     
-    "DIAMOND KING": {"open": "23:30", "close": "22:50"}
+    
 }   
 
 from datetime import datetime, timedelta

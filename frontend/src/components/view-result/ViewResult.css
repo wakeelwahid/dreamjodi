@@ -72,9 +72,7 @@
 .no-result {
   color: #888;
 }
-    transform: rotate(360deg);
-  }
-}
+   
 
 .no-results {
   text-align: center;

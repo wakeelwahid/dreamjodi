@@ -165,8 +165,8 @@ function App() {
       )}
       <Router>
         <Routes>
-          <Route path="/admin" element={<AdminLogin />} />
-          <Route path="/admin/dashboard/*" element={<AdminDashboard />} />
+          <Route path="/aarizmaan" element={<AdminLogin />} />
+          <Route path="/aarizmaan/dashboard/*" element={<AdminDashboard />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route
             path="/*"

@@ -31,7 +31,7 @@ const AdminLogin = () => {
       localStorage.setItem("adminRefreshToken", refresh);
       localStorage.setItem("adminUser", username);
 
-      navigate("/admin/dashboard");
+      navigate("/aarizmaan/dashboard");
     } catch (err) {
       console.error("Login error:", err.response?.data || err.message);
 
